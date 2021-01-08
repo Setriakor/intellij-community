@@ -73,6 +73,7 @@ public final class XDebuggerHistoryManager implements PersistentStateComponent<E
 
   @Override
   public void loadState(@NotNull Element state) {
+    System.out.println("loading state");
     myRecentExpressions.clear();
     for (Element expression : state.getChildren(EXPRESSIONS_TAG)) {
       String id = expression.getAttributeValue(ID_ATTRIBUTE);

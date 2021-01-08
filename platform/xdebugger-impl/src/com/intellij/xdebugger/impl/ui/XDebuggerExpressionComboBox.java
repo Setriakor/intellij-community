@@ -41,8 +41,12 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
   private XExpression myExpression;
   private Function<? super Document, ? extends Document> myDocumentProcessor = Function.identity();
 
-  public XDebuggerExpressionComboBox(@NotNull Project project, @NotNull XDebuggerEditorsProvider debuggerEditorsProvider, @Nullable @NonNls String historyId,
-                                     @Nullable XSourcePosition sourcePosition, boolean showEditor, boolean languageInside) {
+  public XDebuggerExpressionComboBox(@NotNull Project project,
+                                     @NotNull XDebuggerEditorsProvider debuggerEditorsProvider,
+                                     @Nullable @NonNls String historyId,
+                                     @Nullable XSourcePosition sourcePosition,
+                                     boolean showEditor,
+                                     boolean languageInside) {
     super(project, debuggerEditorsProvider, EvaluationMode.EXPRESSION, historyId, sourcePosition);
     myComboBox = new ComboBox<>(myModel, 100);
     myComboBox.setEditable(true);
@@ -155,6 +159,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
       myDelegate = new EditorComboBoxEditor(getProject(), getEditorsProvider().getFileType()) {
         @Override
         protected void onEditorCreate(EditorEx editor) {
+          System.out.println("Editor " + editor.toString());
           editor.putUserData(DebuggerCopyPastePreprocessor.REMOVE_NEWLINES_ON_PASTE, true);
           prepareEditor(editor);
           if (showMultiline) {
@@ -163,6 +168,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
           foldNewLines(editor);
           editor.getFilteredDocumentMarkupModel().addMarkupModelListener(((EditorImpl)editor).getDisposable(), new MarkupModelListener() {
             int errors = 0;
+
             @Override
             public void afterAdded(@NotNull RangeHighlighterEx highlighter) {
               processHighlighter(highlighter, true);
@@ -175,7 +181,8 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
 
             void processHighlighter(@NotNull RangeHighlighterEx highlighter, boolean add) {
               HighlightInfo info = HighlightInfo.fromRangeHighlighter(highlighter);
-              if (info != null && HighlightSeverity.ERROR.equals(info.getSeverity())) {
+              //indicate # related expressions are not errors
+              if (info != null && HighlightSeverity.ERROR.equals(info.getSeverity()) && !info.getText().contains("#")) {
                 errors += add ? 1 : -1;
                 if (errors == 0 || errors == 1) {
                   myComboBox.putClientProperty("JComponent.outline", errors > 0 ? "error" : null);

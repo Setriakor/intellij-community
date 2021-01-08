@@ -98,7 +98,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
       public void actionPerformed(@NotNull AnActionEvent e) {
         Object contents = CopyPasteManager.getInstance().getContents(XWatchTransferable.EXPRESSIONS_FLAVOR);
         if (contents instanceof List) {
-          for (Object item : ((List)contents)){
+          for (Object item : ((List)contents)) {
             if (item instanceof XExpression) {
               addWatchExpression(((XExpression)item), -1, true);
             }
@@ -131,7 +131,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
       @Override
       public boolean onClick(@NotNull MouseEvent event, int clickCount) {
         if (!SwingUtilities.isLeftMouseButton(event) ||
-            ((event.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.ALT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK)) !=0) ) {
+            ((event.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.ALT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK)) != 0)) {
           return false;
         }
         boolean sameRow = isAboveSelectedItem(event, watchTree, false);
@@ -146,7 +146,8 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         Runnable runnable = () -> editWatchAction.actionPerformed(actionEvent);
         if (editAlarm.isEmpty() && quitePeriod.isEmpty()) {
           editAlarm.addRequest(runnable, UIUtil.getMultiClickInterval());
-        } else {
+        }
+        else {
           editAlarm.cancelAllRequests();
         }
         return false;
@@ -222,6 +223,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     addWatchExpression(expression, index, navigateToWatchNode, false);
   }
 
+
   public void addWatchExpression(@NotNull XExpression expression, int index, final boolean navigateToWatchNode, boolean noDuplicates) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     XDebugSession session = getSession(getTree());
@@ -251,7 +253,8 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
   protected XValueContainerNode doCreateNewRootNode(@Nullable XStackFrame stackFrame) {
     if (inlineWatchesEnabled) {
       myRootNode = new InlineWatchesRootNode(getTree(), this, getExpressions(), getInlineExpressions(), stackFrame, myWatchesInVariables);
-    } else {
+    }
+    else {
       myRootNode = new WatchesRootNode(getTree(), this, getExpressions(), stackFrame, myWatchesInVariables);
     }
     return myRootNode;
@@ -272,7 +275,8 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     ApplicationManager.getApplication().assertIsDispatchThread();
     XDebugSession session = getSession(getTree());
 
-    ((InlineWatchesRootNode)myRootNode).addInlineWatchExpression(session != null ? session.getCurrentStackFrame() : null, watch, index, navigateToWatchNode);
+    ((InlineWatchesRootNode)myRootNode)
+      .addInlineWatchExpression(session != null ? session.getCurrentStackFrame() : null, watch, index, navigateToWatchNode);
 
     if (navigateToWatchNode && session != null) {
       XDebugSessionTab.showWatchesView((XDebugSessionImpl)session);
