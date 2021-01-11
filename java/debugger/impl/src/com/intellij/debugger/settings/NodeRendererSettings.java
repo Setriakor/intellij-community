@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.debugger.settings;
 
+
 import com.intellij.debugger.DebuggerContext;
 import com.intellij.debugger.JavaDebuggerBundle;
 import com.intellij.debugger.engine.DebugProcess;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+
 
 @State(name = "NodeRendererSettings", storages = @Storage("debugger.xml"))
 public class NodeRendererSettings implements PersistentStateComponent<Element> {
@@ -263,7 +265,11 @@ public class NodeRendererSettings implements PersistentStateComponent<Element> {
 
   private void addAnnotationRenderers(List<NodeRenderer> renderers, Project project) {
     try {
-      visitAnnotatedElements(Debug.Renderer.class.getName().replace("$", "."), project, (e, annotation) -> {
+      String defaultRenderer=Debug.Renderer.class.getName().replace("$", ".");
+      String alternateRenderer= annotation.Debug.SubclassRenderer.class.getName().replace("$", ".");
+      String rendererName=JavaAnnotationIndex.getInstance().get(StringUtil.getShortName(defaultRenderer), project, GlobalSearchScope.allScope(project))
+                        .size()==1? defaultRenderer:alternateRenderer;
+      visitAnnotatedElements(rendererName, project, (e, annotation) -> {
         if (e instanceof PsiClass) {
           String text = getAttributeValue(annotation, "text");
           LabelRenderer labelRenderer = StringUtil.isEmpty(text) ? null : createLabelRenderer(null, text, null);
