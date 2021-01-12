@@ -127,31 +127,11 @@ public class WatchInplaceEditor extends XDebuggerTreeInplaceEditor {
   }
 
   private void mapMarkedObjectsAndVariables() {
-    System.out.println("Marked Objects -------------------------");
-    myXValueMarkers.getAllMarkers().forEach((o, valueMarkup) -> {
-      System.out.println(valueMarkup.getText());
-    });
-
-    System.out.println("Variables in Editor -----------------------------");
     myXValues.forEach(xValue -> {
-      System.out.println(xValue);
       ValueMarkup valueMarkup = myXValueMarkers.getMarkup((XValue)xValue);
-      System.out.println("Value markup");
-      System.out.println(valueMarkup);
       if (valueMarkup != null) {
         myMappedMarkedObjects.put(valueMarkup.getText(), xValue);
       }
-
-      //myXValueMarkers.getAllMarkers().forEach((o, markup) -> {
-      //  if (markup.getText().equals(xValue.toString())) {
-      //    myMappedMarkedObjects.put(markup.getText(), xValue);
-      //  }
-      //});
-    });
-
-    System.out.println("Mapped marked objects and variables -----------------------");
-    myMappedMarkedObjects.forEach((markedName, xValue) -> {
-      System.out.println("Marked Name " + markedName + " Variable " + xValue.toString());
     });
   }
 

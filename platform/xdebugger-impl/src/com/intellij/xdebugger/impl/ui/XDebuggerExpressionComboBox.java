@@ -159,7 +159,6 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
       myDelegate = new EditorComboBoxEditor(getProject(), getEditorsProvider().getFileType()) {
         @Override
         protected void onEditorCreate(EditorEx editor) {
-          System.out.println("Editor " + editor.toString());
           editor.putUserData(DebuggerCopyPastePreprocessor.REMOVE_NEWLINES_ON_PASTE, true);
           prepareEditor(editor);
           if (showMultiline) {
